@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   portainer-mtp:
-    image: portainer
+    image: portainer/portainer-ce
     ports:
       - "9443:443"
     volumes:
