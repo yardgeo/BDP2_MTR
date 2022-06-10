@@ -6,7 +6,7 @@ services:
       - "9443:443"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - portainer_data:/data portainer/portainer-ce
+      - ./portainer_data:/data portainer/portainer-ce
     networks:
       - bdp2-net
 
@@ -16,7 +16,7 @@ services:
     image: redis
     command: redis-server --maxmemory 32mb --save 180 1 --dbfilename my_database.rdb
     volumes:
-      - data:/data
+      - ./data:/data
     networks:
       - bdp2-net
 
@@ -25,7 +25,7 @@ services:
     container_name: jupiter-app-mtp
     build: ./data-analysis-docker
     volumes:
-      - data-analysis-work:/home/jovyan
+      - ./data-analysis-work:/home/jovyan
     environment:
       - JUPYTER_ENABLE_LAB=yes
       - CHOWN_HOME_OPTS=-R
