@@ -1,0 +1,58 @@
+version: '3.3'
+services:
+  portainer-mtp:
+    image: portainer
+    ports:
+      - "9443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+      - portainer/portainer-ce
+    networks:
+      - bdp2-net
+
+
+  redis-mtp:
+    container_name: redis-mtp
+    image: redis
+    command: redis-server --maxmemory 32mb --save 180 1 --dbfilename my_database.rdb
+    volumes:
+      - data:/data
+    networks:
+      - bdp2-net
+
+
+  jupiter-app-mtp:
+    container_name: jupiter-app-mtp
+    build: ./data-analysis-docker
+    volumes:
+      - data-analysis-work:/home/jovyan
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - CHOWN_HOME_OPTS=-R
+      - CHOWN_HOME=yes
+      - JUPYTER_TOKEN=bdp2
+    expose:
+      - 8888
+    depends_on:
+      - redis-mtp
+    networks:
+      - bdp2-net
+
+  nginx-mtp:
+    build: ./nginx
+    ports:
+      - "443:443"
+    depends_on:
+      - jupiter-app-mtp
+    networks:
+      - bdp2-net
+    volumes:
+      - /etc/letsencrypt/live/exgratia.ru/privkey.pem:/etc/letsencrypt/live/exgratia.ru/privkey.pem
+      - /etc/letsencrypt/live/exgratia.ru/fullchain.pem:/etc/letsencrypt/live/exgratia.ru/fullchain.pem
+
+
+
+networks:
+  bdp2-net:
+    driver: bridge
