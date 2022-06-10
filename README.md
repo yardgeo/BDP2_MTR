@@ -28,3 +28,6 @@ Project is not available for public usage.
 
 To get access via bdp.exgratia.ru please contact Georgii Iardukhin
 georgii.iardukhin@studio.unibo.it 
+
+## Example of work
+![alt text](example_of_work/example_access.png?raw=true)
